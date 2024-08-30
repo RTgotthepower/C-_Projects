@@ -1,0 +1,67 @@
+//Write an application that waits a random delay between for and ten seconds, 
+//and then asks the user to type in a random three-letter word
+
+#include<iostream>
+#include<string>
+#include<chrono>
+#include<algorithm>
+using namespace std;
+
+string words[10] = {"CAT", "RAT", "BAT", "CAP", "BAG", "RAG", "RAP", "BET", "BEG", "LET"};
+
+int main(){
+    cout<<"(SPACETATUM)\n";
+    cout<<"                            The Reflex Game\n";
+    cout<<"                            === ====== ====\n";
+    cout<<"After a random delay, you'll be asked to type in a 3-letter word.\n";
+    cout <<"When that happens, type in the word as fast as you can, and hit enter. \n";
+    cout << "Don't worry about the character case (\"CAT\" = \"cat\" = \"CaT\").\n\n";
+    cout << "                Press Enter When You're Ready To Start." << flush;
+    
+    string try_again;
+    
+    getline(cin, try_again);
+    srand((unsigned)(time(0)));
+    rand();
+    do{
+        string word;
+        
+        int i = rand() % 10;
+        chrono::seconds delay(4 + rand() % 7);
+        
+        auto start = chrono::steady_clock::now();
+        auto end = start + delay;
+        
+        cout << "\n\n        Wait for it ................." << flush;
+        
+        do{
+            
+        }while(end > chrono::steady_clock::now());
+            cout << "\n\t\t\t\t\tType the word " << words[i] << ":" << flush;
+        
+        start = chrono::steady_clock::now();
+        getline(cin, word);
+        end = chrono::steady_clock::now();
+        transform(word.begin(), word.end(), word.begin(), ::toupper);
+        double elapsed_seconds = chrono::duration<double>(end - start).count();
+        
+        cout << "\n";
+        
+        if(elapsed_seconds > 2.0) {
+            if(word.compare(words[i]) == 0)
+                cout << "You typed the right word, but you took too long to react! Try again, you can do better than " << elapsed_seconds << " seconds.\n\n";
+            else
+                cout << "You took too long to react and typed the wrong word! Try again. For the record, it took you " << elapsed_seconds << " seconds.\n\n";
+        } else {
+            if(word.compare(words[i]) == 0)
+                cout << "Well done! It took you " << elapsed_seconds << " seconds, and you typed the right word!\n\n";
+            else
+                cout << "It took you " << elapsed_seconds << " seconds, but you typed the wrong word! Try again.\n\n";
+        }
+        
+        cout << "Try Again? (Y/N): " << flush;
+        getline(cin, try_again);
+    } while(try_again[0] == 'Y' || try_again[0] == 'y');
+    
+    return 0;
+}
